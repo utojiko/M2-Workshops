@@ -14,10 +14,16 @@ function getWorkshopList() {
 function getWorkshopByName(name) {
     return new Promise((resolve, reject) => {
         if (!name) {
-            reject(new Error("name parameter is required"))
+            reject(new Error("name parameter is required"));
+            return;
         }
-        resolve(inMemoryWorkshop.find(workshop => workshop.name === workshop))
-    })
+        const workshop = inMemoryWorkshop.find(workshop => workshop.name === name);
+        if (workshop) {
+            resolve(workshop);
+        } else {
+            reject(new Error("Workshop not found"));
+        }
+    });
 }
 
 function addWorkshop(name, description) {
@@ -42,10 +48,17 @@ function removeWorkshopByName(name) {
     })
 }
 
-function updateWorkshop(name, description) {
+function updateWorkshop(oldName, newName, newDescription) {
     return new Promise((resolve, reject) => {
-        reject(new Error("Not implemented"))
-    })
+        const workshop = inMemoryWorkshop.find(workshop => workshop.name === oldName);
+        if (workshop) {
+            workshop.name = newName;
+            workshop.description = newDescription;
+            resolve(workshop);
+        } else {
+            reject(new Error("Workshop not found"));
+        }
+    });
 }
 
 module.exports = {
