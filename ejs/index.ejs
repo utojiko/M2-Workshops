@@ -13,12 +13,16 @@
 
 <a type="button" href="/workshop" class="btn btn-success btn-lg">Create new workshop</a>
 
+
 <ul class="list-unstyled"></ul>
 <% workshops.forEach(function(workshop) { %>
     <li class="media my-4">
         <div class="media-body">
             <h5 class="mt-0 mb-1"><%= workshop.name %></h5>
-            <%= workshop.description %>        </div>        
+            <%= workshop.description %>
+            <a type="button" href="/update-workshop/<%= workshop.name %>" class="btn btn-info ">Update</a>
+        </div>        
+            
     </li>
 <% }); %>
 </ul>
