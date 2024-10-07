@@ -32,6 +32,7 @@ repository.init().then(() => {
     })
     
     app.post('/workshop', function (req, res) {
+        console.log("post workshop")
         const name = req.body.name
         const description = req.body.description
         repository.addWorkshop(name, description).then(() => {
@@ -58,12 +59,44 @@ repository.init().then(() => {
         res.status(500).send("TODO")
     })
     
-    app.post('/update-workshop', function(req, res) {
-        res.status(500).send("TODO")
+
+    app.get('/update-workshop', function (req, res) {
+        console.log("get update-workshop")
+        res.render('update-workshop')
+    })
+
+    app.get('/update-workshop/:name', function(req, res) {
+        const workshopName = req.params.name;
+        repository.getWorkshopByName(workshopName).then(workshop => {
+            if (workshop) {
+                res.render('update-workshop', { workshop: workshop });
+            } else {
+                res.status(404).send('Workshop not found');
+            }
+        }).catch(err => {
+            res.status(500).send(err.message);
+        });
+    });
+
+    app.post('/update-workshop/:name', function(req, res) {
+        console.log("post update-workshop : ")
+        const workshopName = req.params.name;
+        const newName = req.body.name;
+        const newDescription = req.body.description;
+
+        repository.updateWorkshop(workshopName, newName, newDescription).then(() => {
+            repository.getWorkshopList()
+            .then(workshops => {
+                res.render("index", {
+                    workshops: workshops
+                })
+            })
+        })
+        .catch(e =>res.send(e.message))
     })
     
-    app.listen(3000, function () {
-      console.log('Workshop app listening on port 3000!')
+    app.listen(3001, function () {
+      console.log('Workshop app listening on port 3001!')
     })
     
 })
